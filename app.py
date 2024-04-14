@@ -23,16 +23,16 @@ def index():
 
 @app.route('/verifySignature',methods=["POST"])
 def verify():
-    # id = request.form['person_id']
+    id = request.form['person_id']
     # id='001'
     # image=
     image= request.files['image']
     print(image.filename)
     image_path=savephoto(image,image.filename)
     print(id,image_path)
-    if verifySignature('001',image_path):
-        return "<H1> Verfied <H1>"
+    if verifySignature(id,image_path):
+        return "<H1> The Image is Genuine <H1>"
     else:
-        return "<H1> UnVerified <H1>"
+        return "<H1> The Image is Forged!! <H1>"
 
 

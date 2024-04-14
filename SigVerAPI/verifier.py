@@ -30,6 +30,7 @@ def testing(path):
         handle.write(','.join(map(str, feature))+'\n')
 
 def readCSV(train_path, test_path, type2=False):
+    n_input = 9
     # Reading train data
     df = pd.read_csv(train_path, usecols=range(n_input))
     train_input = np.array(df.values)
@@ -53,77 +54,79 @@ def readCSV(train_path, test_path, type2=False):
         return train_input, corr_train, test_input
 
         
-forged_image_paths=os.getenv("FORGED_IMAGE_PATH")
-genuine_image_paths=os.getenv("GENIUNE_IMAGE_PATH")
-
-# makeCSV(genuine_image_paths=genuine_image_paths,forged_image_paths=forged_image_paths)
-
-n_input = 9
 
 
-tf.reset_default_graph()
-# Parameters
-learning_rate = 0.0009
-training_epochs = 10000
-display_step = 1
-
-# Network Parameters
-n_hidden_1 = 7 # 1st layer number of neurons
-n_hidden_2 = 13 # 2nd layer number of neurons
-# n_hidden_3 = 13 # 3rd layer
-n_classes = 2 # no. of classes (genuine or forged)
-
-# tf Graph input
-X = tf.placeholder("float", [None, n_input])
-Y = tf.placeholder("float", [None, n_classes])
-
-# Store layers weight & bias
-weights = {
-    'h1': tf.Variable(tf.random_normal([n_input, n_hidden_1], seed=1)),
-    'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2],seed=2)),
-    # 'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3], seed=1)),
-    'out': tf.Variable(tf.random_normal([n_hidden_2, n_classes], seed=2))
-}
-biases = {
-    'b1': tf.Variable(tf.random_normal([n_hidden_1], seed=1)),
-    'b2': tf.Variable(tf.random_normal([n_hidden_2], seed=2)),
-    # 'b3': tf.Variable(tf.random_normal([n_hidden_3], seed=2)),
-    'out': tf.Variable(tf.random_normal([n_classes], seed=1))
-}
 
 
-# Create model
-def multilayer_perceptron(x):
-    layer_1 = tf.tanh((tf.matmul(x, weights['h1']) + biases['b1']))
-    layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
-    # layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
-    out_layer = tf.tanh(tf.matmul(layer_2, weights['out']) + biases['out'])
-    return out_layer
+def evaluate(train_path, test_path, type2=False): 
+    forged_image_paths=os.getenv("FORGED_IMAGE_PATH")
+    genuine_image_paths=os.getenv("GENIUNE_IMAGE_PATH")
 
-# Construct model
-logits = multilayer_perceptron(X)
+    # makeCSV(genuine_image_paths=genuine_image_paths,forged_image_paths=forged_image_paths)
 
-# Define loss and optimizer
+    n_input = 9
 
-loss_op = tf.reduce_mean(tf.squared_difference(logits, Y))
-optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
-train_op = optimizer.minimize(loss_op)
-# For accuracies
-pred = tf.nn.softmax(logits)  # Apply softmax to logits
-correct_prediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-# Initializing the variables
+    tf.reset_default_graph()
+    # Parameters
+    learning_rate = 0.0009
+    training_epochs = 10000
+    display_step = 1
 
-init = tf.global_variables_initializer()
+    # Network Parameters
+    n_hidden_1 = 7 # 1st layer number of neurons
+    n_hidden_2 = 13 # 2nd layer number of neurons
+    # n_hidden_3 = 13 # 3rd layer
+    n_classes = 2 # no. of classes (genuine or forged)
 
-def evaluate(train_path, test_path, type2=False):   
+    # tf Graph input
+    X = tf.placeholder("float", [None, n_input])
+    Y = tf.placeholder("float", [None, n_classes])
+
+    # Store layers weight & bias
+    weights = {
+        'h1': tf.Variable(tf.random_normal([n_input, n_hidden_1], seed=1)),
+        'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2],seed=2)),
+        # 'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3], seed=1)),
+        'out': tf.Variable(tf.random_normal([n_hidden_2, n_classes], seed=2))
+    }
+    biases = {
+        'b1': tf.Variable(tf.random_normal([n_hidden_1], seed=1)),
+        'b2': tf.Variable(tf.random_normal([n_hidden_2], seed=2)),
+        # 'b3': tf.Variable(tf.random_normal([n_hidden_3], seed=2)),
+        'out': tf.Variable(tf.random_normal([n_classes], seed=1))
+    }
+
+
+    # Create model
+    def multilayer_perceptron(x):
+        layer_1 = tf.tanh((tf.matmul(x, weights['h1']) + biases['b1']))
+        layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
+        # layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
+        out_layer = tf.tanh(tf.matmul(layer_2, weights['out']) + biases['out'])
+        return out_layer
+
+    # Construct model
+    logits = multilayer_perceptron(X)
+
+    # Define loss and optimizer
+
+    loss_op = tf.reduce_mean(tf.squared_difference(logits, Y))
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
+    train_op = optimizer.minimize(loss_op)
+    # For accuracies
+    pred = tf.nn.softmax(logits)  # Apply softmax to logits
+    correct_prediction = tf.equal(tf.argmax(pred,1), tf.argmax(Y,1))
+    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    # Initializing the variables
+    init = tf.global_variables_initializer()  
+
     if not(type2):
         train_input, corr_train, test_input, corr_test = readCSV(train_path, test_path)
     else:
         train_input, corr_train, test_input = readCSV(train_path, test_path, type2)
     ans = 'Random'
-    costs=[]
+    # costs=[]
 
     with tf.Session() as sess:
         sess.run(init)
@@ -132,10 +135,9 @@ def evaluate(train_path, test_path, type2=False):
 
             # Run optimization op (backprop) and cost op (to get loss value)
             _, cost = sess.run([train_op, loss_op], feed_dict={X: train_input, Y: corr_train})
-            costs.append(cost)
 
-            if epoch==training_epochs-1:
-                print (epoch , cost)
+            # if epoch==training_epochs-1:
+            #     print (epoch , cost)
 
             if epoch%100==0:
                 print(epoch , cost)
@@ -159,8 +161,7 @@ def evaluate(train_path, test_path, type2=False):
 
         # Finding accuracies
         accuracy1 =  accuracy.eval({X: train_input, Y: corr_train})
-        if accuracy1 == 1:
-            print("Accuracy for train:", accuracy1)
+        print("Accuracy for train:", accuracy1)
         
         if type2 is False:
             accuracy2 =  accuracy.eval({X: test_input, Y: corr_test})   
