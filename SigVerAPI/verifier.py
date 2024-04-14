@@ -139,10 +139,10 @@ def evaluate(train_path, test_path, type2=False):
             # if epoch==training_epochs-1:
             #     print (epoch , cost)
 
-            if epoch%100==0:
-                print(epoch , cost)
-            elif epoch==training_epochs-1:
-                print(epoch , cost)
+            # if epoch%100==0:
+            #     print(epoch , cost)
+            # elif epoch==training_epochs-1:
+            #     print(epoch , cost)
 
             if cost<0.0001:
                 break

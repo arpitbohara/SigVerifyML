@@ -71,6 +71,16 @@
             background-color: #f0f0f0;
             border-radius: 8px;
         }
+
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7) url('loading.gif') no-repeat center;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -87,10 +97,9 @@
                 hx-encoding="multipart/form-data"
                 hx-target="#result"
                 hx-swap="innerHTML"
-             >
+            >
+            <div class="loading"></div>
         </form>
-
-</button>
         <div id="result" name="result"></div>
     </div>
 
@@ -104,15 +113,24 @@
             formData.append("person_id", personId);
             formData.append("image", imageFile);
 
+            // Show loading animation
+            document.querySelector(".loading").style.display = "block";
+
             fetch("/", {
                 method: "POST",
                 body: formData
             })
             .then(response => response.text())
             .then(data => {
+                // Hide loading animation
+                document.querySelector(".loading").style.display = "none";
+                
                 document.getElementById("result").innerHTML = data;
             })
             .catch(error => {
+                // Hide loading animation
+                document.querySelector(".loading").style.display = "none";
+                
                 console.error("Error:", error);
             });
         });
