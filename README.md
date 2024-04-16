@@ -1,4 +1,11 @@
 
+# Running in Dev Mode
+    $env:FLASK_ENV = "development"     
+    flask run
+
+
+# How Verification Works
+
 <b>This Repository contains code for verification of signature</b>
 
 <br/>Tensorflow is used and details of folder is as follows -
@@ -12,7 +19,3 @@
 <br/>YYY deontes the n'th no.of attempt
 
 <br/>Now if <b>XXX == ZZZ </b>then image is <b>genuine</b> otherwise the signature is forged
-
-# Running in Dev Mode
-    $env:FLASK_ENV = "development"     
-    flask run
