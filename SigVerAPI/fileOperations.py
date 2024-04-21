@@ -12,7 +12,7 @@ def getCSVFeatures(path, img=None, display=False):
     features = (temp[0], temp[1][0], temp[1][1], temp[2], temp[3], temp[4][0], temp[4][1], temp[5][0], temp[5][1])
     return features
 
-def makeCSV(genuine_image_paths,forged_image_paths):
+def makeCSV(genuine_image_paths,forged_image_paths,start=1,end=14):
     features_base_folder=os.getenv('IMAGE_FEATURES_BASE')
     train_feature_folder=os.getenv('TRAINING_FEATURE_FOLDER')
     test_feature_folder=os.getenv('TESTING_FEATURE_FOLDER')
@@ -29,7 +29,7 @@ def makeCSV(genuine_image_paths,forged_image_paths):
     gpath = genuine_image_paths
     # forged signatures path
     fpath = forged_image_paths
-    for person in range(1,14):
+    for person in range(start,end):
         per = ('00'+str(person))[-3:]
         print('Saving features for person id-',per)
         

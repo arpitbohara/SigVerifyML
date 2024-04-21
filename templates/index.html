@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signature Verification</title>
+    <title>Handwritten Signature Verification System </title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,12 +85,13 @@
 </head>
 <body>
     <div class="container">
-        <h1>Signature Verification</h1>
+        <h1>Handwritten Signature Verification System</h1>
         <form id="verificationForm" enctype="multipart/form-data">
             <label for="person_id">Person ID:</label>
-            <input type="text" id="person_id" name="person_id" requried><br><br>
+            <input type="text" id="person_id" name="person_id" requried ><br><br>
             <label for="image">Upload Signature Image:</label>
-            <input type="file" id="image" name="image" required><br><br>
+            <input type="file" id="image" name="image" accept="image/jpeg, image/png, image/jpg" required onchange="previewImage(this);"><br><br>
+            <div id="imagePreview"></div>
             <input type="submit" value="Verify"
                 hx-post="/verifySignature"
                 hx-trigger="click"
@@ -105,6 +106,21 @@
     </div>
 
     <script>
+        function previewImage(input) {
+            var file = input.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var image = document.createElement('img');
+                image.src = e.target.result;
+                image.style.maxWidth = '100%'; // Limit image width to container width
+                document.getElementById('imagePreview').innerHTML = ''; // Clear previous preview
+                document.getElementById('imagePreview').appendChild(image);
+            }
+
+            reader.readAsDataURL(file);
+        }
+
         document.getElementById("verificationForm").addEventListener("submit", function(event) {
             event.preventDefault();
             var personId = document.getElementById("person_id").value;

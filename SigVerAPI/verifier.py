@@ -4,7 +4,6 @@ import pandas as pd
 import numpy as np
 from time import time
 import keras
-# from helperfunctions import *
 from SigVerAPI.fileOperations import getCSVFeatures
 import os
 import warnings
@@ -76,7 +75,6 @@ def evaluate(train_path, test_path, type2=False):
     # Network Parameters
     n_hidden_1 = 7 # 1st layer number of neurons
     n_hidden_2 = 13 # 2nd layer number of neurons
-    # n_hidden_3 = 13 # 3rd layer
     n_classes = 2 # no. of classes (genuine or forged)
 
     # tf Graph input
@@ -87,13 +85,11 @@ def evaluate(train_path, test_path, type2=False):
     weights = {
         'h1': tf.Variable(tf.random_normal([n_input, n_hidden_1], seed=1)),
         'h2': tf.Variable(tf.random_normal([n_hidden_1, n_hidden_2],seed=2)),
-        # 'h3': tf.Variable(tf.random_normal([n_hidden_2, n_hidden_3], seed=1)),
         'out': tf.Variable(tf.random_normal([n_hidden_2, n_classes], seed=2))
     }
     biases = {
         'b1': tf.Variable(tf.random_normal([n_hidden_1], seed=1)),
         'b2': tf.Variable(tf.random_normal([n_hidden_2], seed=2)),
-        # 'b3': tf.Variable(tf.random_normal([n_hidden_3], seed=2)),
         'out': tf.Variable(tf.random_normal([n_classes], seed=1))
     }
 
@@ -102,7 +98,6 @@ def evaluate(train_path, test_path, type2=False):
     def multilayer_perceptron(x):
         layer_1 = tf.tanh((tf.matmul(x, weights['h1']) + biases['b1']))
         layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
-        # layer_3 = tf.add(tf.matmul(layer_2, weights['h3']), biases['b3'])
         out_layer = tf.tanh(tf.matmul(layer_2, weights['out']) + biases['out'])
         return out_layer
 
