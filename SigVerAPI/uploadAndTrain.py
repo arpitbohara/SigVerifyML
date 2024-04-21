@@ -15,7 +15,6 @@ def savephoto(image,image_name,dir)->str:
 def get_new_trained_id():
     test_feature_folder=os.getenv("TESTING_FEATURE_FOLDER")
     test_files=os.listdir(test_feature_folder)
-    # for i in test_files:latest=count
     start=len(test_files)+1
     return start
 

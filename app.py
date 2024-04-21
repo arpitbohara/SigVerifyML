@@ -3,7 +3,6 @@
 from flask import Flask, render_template, request
 import os
 from flask_cors import CORS
-import time
 from flask import send_from_directory
 from SigVerAPI.verifier import verifySignature
 from SigVerAPI.uploadAndTrain import *
@@ -26,7 +25,6 @@ def send_report(path):
 @app.route('/verifySignature',methods=["POST"])
 def verify():
     id = request.form['person_id']
-
     try: image=request.files['image'] 
     except: image=""
     
@@ -35,8 +33,11 @@ def verify():
     if image == "":
         return "<H1> Please upload an image. <H1>"
     
+    test_feature_folder=os.getenv("TESTING_FEATURE_FOLDER")
+    test_files=os.listdir(test_feature_folder)
+
     id_int = int(id)
-    if id_int > 14:
+    if id_int > len(test_files):
         return "<H1> The id doesn't exist. Enter valid ID. <H1>"
     
     print(image.filename)
@@ -61,11 +62,5 @@ def UploadSignatures():
     genuine_images = request.files.getlist('genuine_image')
     forged_images = request.files.getlist('forged_image')
 
-    # try: image=request.files['image'] 
-    # except: image=""
-    
-    # if image == "":
-    #     return "<H1> Please upload images. <H1>"
-    
     if upload_train_test_image(forged_images,genuine_images):
         return "<H1> The images are uploaded and CSV files are created <H1>"

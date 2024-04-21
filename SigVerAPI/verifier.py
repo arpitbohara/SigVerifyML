@@ -14,8 +14,7 @@ warnings.filterwarnings('ignore', category=FutureWarning)
 
 from dotenv import load_dotenv
 load_dotenv()
-# genuine_image_paths = "D:\\Arpit College\\FYP\\SignatureVerificationSystem\\real/"
-# FORGED_IMAGE_PATH = "D:\\Arpit College\\FYP\\SignatureVerificationSystem\\forged/"
+
 
 
 def testing(path):
@@ -61,16 +60,11 @@ def evaluate(train_path, test_path, type2=False):
     forged_image_paths=os.getenv("FORGED_IMAGE_PATH")
     genuine_image_paths=os.getenv("GENIUNE_IMAGE_PATH")
 
-    # makeCSV(genuine_image_paths=genuine_image_paths,forged_image_paths=forged_image_paths)
-
     n_input = 9
-
-
     tf.reset_default_graph()
     # Parameters
     learning_rate = 0.0009
     training_epochs = 10000
-    display_step = 1
 
     # Network Parameters
     n_hidden_1 = 7 # 1st layer number of neurons
@@ -173,9 +167,9 @@ def evaluate(train_path, test_path, type2=False):
                 print('Forged Image')
                 return False
 
-
 # trainAndTest(display=True)
-# train_person_id:str="001",test_image_path:str=r"D:\Arpit College\FYP\SignatureVerificationSystem\uploads\021001_000.png"
+
+
 def verifySignature(train_person_id:str,test_image_path:str):
     # train_person_id = "001"
     # test_image_path = input("Enter path of signature image : ")
