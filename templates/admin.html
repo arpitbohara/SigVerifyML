@@ -120,7 +120,7 @@
 <body>
     <div class="container">
         <h1>Handwritten Signature Verification System</h1>
-        <form id="verificationForm" enctype="multipart/form-data">
+        <form id="uploadForm" enctype="multipart/form-data" onsubmit="return checkNumberOfFiles(event)">
             <div class="upload-container">
                 <label for="genuine_image">Upload Genuine Signature Image:</label>
                 <input type="file" id="genuine_image" name="genuine_image" multiple="multiple" accept="image/jpeg, image/png, image/jpg" required onchange="previewImage(this);">
@@ -138,6 +138,7 @@
                 hx-target="#result"
                 hx-swap="innerHTML"
                 hx-indicator="#spinner"
+                onclick="checkNumberOfFiles(event)"
             >
             <img id="spinner" class="htmx-indicator" src="/static/loading.svg"/>
         </form>
@@ -162,27 +163,16 @@
             reader.readAsDataURL(file);
         }
 
-        // document.getElementById("verificationForm").addEventListener("submit", function(event) {
-        //     event.preventDefault();
-        //     var genuineImageFile = document.getElementById("genuine_image").files[0];
-        //     var forgedImageFile = document.getElementById("forged_image").files[0];
+        function checkNumberOfFiles(event) {
+            var genuineInput = document.getElementById('genuine_image');
+            var forgedInput = document.getElementById('forged_image');
+        
+            if (genuineInput.files.length !== 5 || forgedInput.files.length !== 5) {
+                alert("Please select exactly 5 genuine and 5 forged images.");
+                event.preventDefault(); // Prevent form submission
+            }
+        }
 
-        //     var formData = new FormData();
-        //     formData.append("genuine_image", genuineImageFile);
-        //     formData.append("forged_image", forgedImageFile);
-
-        //     fetch("/verifySignatures", {
-        //         method: "POST",
-        //         body: formData
-        //     })
-        //     .then(response => response.text())
-        //     .then(data => {
-        //         document.getElementById("result").innerHTML = data;
-        //     })
-        //     .catch(error => {
-        //         console.error("Error:", error);
-        //     });
-        // });
     </script>
 </body>
 </html>

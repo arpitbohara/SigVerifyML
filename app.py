@@ -61,6 +61,9 @@ def savephoto(image,image_name)->str:
 def UploadSignatures():
     genuine_images = request.files.getlist('genuine_image')
     forged_images = request.files.getlist('forged_image')
+    
+    if len(genuine_images) != 5 or len(forged_images) != 5:
+        return "<H1> Please upload exactly 5 genuine and 5 forged images. <H1>"
 
     if upload_train_test_image(forged_images,genuine_images):
         return "<H1> The images are uploaded and CSV files are created <H1>"
