@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <script src="https://unpkg.com/htmx.org@1.9.11" integrity="sha384-0gxUXCCR8yv9FM2b+U3FDbsKthCI66oH5IA9fHppQq9DDMHuMauqq1ZHBpJxQ0J0" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handwritten Signature Verification System</title>
+    <title>Admin Portal: Handwritten Signature Verification System</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,12 +16,12 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         h1 {
@@ -119,7 +119,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Handwritten Signature Verification System</h1>
+        <h1>Admin Portal</h1>
         <form id="uploadForm" enctype="multipart/form-data" onsubmit="return checkNumberOfFiles(event)">
             <div class="upload-container">
                 <label for="genuine_image">Upload Genuine Signature Image:</label>
@@ -147,20 +147,43 @@
     </div>
 
     <script>
+        // function previewImage(input) {
+        //     var file = input.files[0];
+        //     var reader = new FileReader();
+
+        //     reader.onload = function(e) {
+        //         var image = document.createElement('img');
+        //         image.src = e.target.result;
+        //         image.style.maxWidth = '100%'; // Limit image width to container width
+        //         var previewContainer = input.id === 'genuine_image' ? 'genuineImagePreview' : 'forgedImagePreview';
+        //         document.getElementById(previewContainer).innerHTML = ''; // Clear previous preview
+        //         document.getElementById(previewContainer).appendChild(image);
+        //     }
+
+        //     reader.readAsDataURL(file);
+        // }
+        
         function previewImage(input) {
-            var file = input.files[0];
-            var reader = new FileReader();
+            var files = input.files;
+            var previewContainer = input.id === 'genuine_image' ? 'genuineImagePreview' : 'forgedImagePreview';
+            var container = document.getElementById(previewContainer);
 
-            reader.onload = function(e) {
-                var image = document.createElement('img');
-                image.src = e.target.result;
-                image.style.maxWidth = '100%'; // Limit image width to container width
-                var previewContainer = input.id === 'genuine_image' ? 'genuineImagePreview' : 'forgedImagePreview';
-                document.getElementById(previewContainer).innerHTML = ''; // Clear previous preview
-                document.getElementById(previewContainer).appendChild(image);
+            // Clear previous previews
+            container.innerHTML = '';
+
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    var image = document.createElement('img');
+                    image.src = e.target.result;
+                    image.style.maxWidth = '100%'; // Limit image width to container width
+                    container.appendChild(image); // Append new image
+                }
+
+                reader.readAsDataURL(file);
             }
-
-            reader.readAsDataURL(file);
         }
 
         function checkNumberOfFiles(event) {
