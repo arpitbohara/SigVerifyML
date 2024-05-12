@@ -4,12 +4,12 @@ import dotenv
 dotenv.load_dotenv()
 from SigVerAPI.fileOperations import makeCSV
 
-def savephoto(image,image_name,dir)->str:
+def savephoto(image,image_name,dir,message)->str:
     if not os.path.exists(dir): os.mkdir(dir)
     image_path = os.path.abspath(f"{dir}/{image_name}")
     image_path_normal=os.path.normpath(image_path)
     image.save(image_path)
-    print("File is saved!!")
+    print(message+" Image is saved!!")
     return image_path_normal
 
 def get_new_trained_id():
@@ -34,12 +34,12 @@ def upload_train_test_image(forged_image,geniuine_image):
     counter=0
     for image in forged_image:
         image_name='021'+new_person_id+"_00"+str(counter)+".png"
-        savephoto(image,image_name,dir=forged_image_paths)
+        savephoto(image,image_name,dir=forged_image_paths, message = "Forged")
         counter=counter+1
     counter=0
     for image in geniuine_image:
         image_name=new_person_id+new_person_id+"_00"+str(counter)+".png"
-        savephoto(image,image_name,dir=genuine_image_paths)
+        savephoto(image,image_name,dir=genuine_image_paths,  message = "Genuine")
         counter=counter+1
     makeCSVsingle()
     return True

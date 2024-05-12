@@ -42,11 +42,11 @@ def verify():
     
     print(image.filename)
     image_path=savephoto(image,image.filename)
-    print("The passed id is: "+id, "The image path is: "+image_path)
+    # print("The passed id is: "+id, "The image path is: "+image_path)
     if verifySignature(id,image_path):
-        return "<H1> The Image is Genuine <H1>"
+        return "<H1> The Signature is Genuine <H1>"
     else:
-        return "<H1> The Image is Forged!! <H1>"
+        return "<H1> The Signature is Forged!! <H1>"
 
 def savephoto(image,image_name)->str:
     dir="uploads"

@@ -16,7 +16,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-
 def testing(path):
     feature = getCSVFeatures(path)
     test_csv_path=os.getenv('TEST_CSV_PATH')
@@ -51,11 +50,6 @@ def readCSV(train_path, test_path, type2=False):
     else:
         return train_input, corr_train, test_input
 
-        
-
-
-
-
 def evaluate(train_path, test_path, type2=False): 
     forged_image_paths=os.getenv("FORGED_IMAGE_PATH")
     genuine_image_paths=os.getenv("GENIUNE_IMAGE_PATH")
@@ -63,12 +57,12 @@ def evaluate(train_path, test_path, type2=False):
     n_input = 9
     tf.reset_default_graph()
     # Parameters
-    learning_rate = 0.0009
+    learning_rate = 0.001
     training_epochs = 10000
 
     # Network Parameters
     n_hidden_1 = 7 # 1st layer number of neurons
-    n_hidden_2 = 13 # 2nd layer number of neurons
+    n_hidden_2 = 7 # 2nd layer number of neurons
     n_classes = 2 # no. of classes (genuine or forged)
 
     # tf Graph input
@@ -114,8 +108,6 @@ def evaluate(train_path, test_path, type2=False):
         train_input, corr_train, test_input, corr_test = readCSV(train_path, test_path)
     else:
         train_input, corr_train, test_input = readCSV(train_path, test_path, type2)
-    ans = 'Random'
-    # costs=[]
 
     with tf.Session() as sess:
         sess.run(init)
@@ -125,28 +117,10 @@ def evaluate(train_path, test_path, type2=False):
             # Run optimization op (backprop) and cost op (to get loss value)
             _, cost = sess.run([train_op, loss_op], feed_dict={X: train_input, Y: corr_train})
 
-            # if epoch==training_epochs-1:
-            #     print (epoch , cost)
-
-            # if epoch%100==0:
-            #     print(epoch , cost)
-            # elif epoch==training_epochs-1:
-            #     print(epoch , cost)
-
             if cost<0.0001:
                 break
-#             # Display logs per epoch step
-        #     if epoch % 999 == 0:
-        #         print("Epoch:", '%04d' % (epoch+1), "cost={:.9f}".format(cost))
+            
         print("Optimization Finished!")
-
-         # Plot the cost values
-        # plt.plot(costs)
-        # plt.xlabel('Epoch')
-        # plt.ylabel('Cost')
-        # plt.title('Cost vs. Epoch')
-        # plt.show()
-
 
         # Finding accuracies
         accuracy1 =  accuracy.eval({X: train_input, Y: corr_train})
@@ -167,12 +141,7 @@ def evaluate(train_path, test_path, type2=False):
                 print('Forged Image')
                 return False
 
-# trainAndTest(display=True)
-
-
 def verifySignature(train_person_id:str,test_image_path:str):
-    # train_person_id = "001"
-    # test_image_path = input("Enter path of signature image : ")
     train_base_folder=str(os.getenv('TRAINING_FEATURE_FOLDER'))
     train_path = train_base_folder+'/training_'+train_person_id+'.csv'
     print(train_path)
